@@ -1,4 +1,6 @@
-﻿using System;
+﻿//A binary tree in C#.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace TreeSequence
 {
+    //Node object.
     class Node
     {
         public Node()
@@ -27,7 +30,6 @@ namespace TreeSequence
             Console.Write(data);
         }
         
-
         public int Data
         {
             get
@@ -83,10 +85,14 @@ namespace TreeSequence
 
         public void Insert(int val)
         {
-            //BFS insertion
+            //Breadth First Traversal insertion.  This is a binary tree,
+            //not a binary search tree.  Insertion will be done in left to right
+            //breadth first order.
             Queue<Node> q = new Queue<Node>();
             q.Enqueue(root);
 
+            //Continue enqueueing until an empty spot is found.
+            //Then insert the node and stop traversing.
             bool inserted = false;
             while (q.Count > 0 && !inserted)
             {
@@ -109,11 +115,13 @@ namespace TreeSequence
             }
         }
 
+        //DFS print of tree.
         public void Print()
         {
             DoPrint(root);
         }
 
+        //Static helper function to create a random tree of random depth.
         public static BinaryTree CreateRandomTree(int max = 15)
         {
             Random r = new Random();
@@ -126,6 +134,8 @@ namespace TreeSequence
             return bt;
         }
 
+        //A static helper function which creates a tree guaranteed to have
+        //several sequences adding to the number 6.
         public static BinaryTree CreateTest1()
         {
             BinaryTree bt = new BinaryTree(6);
@@ -141,8 +151,11 @@ namespace TreeSequence
             return bt;
         }
 
+        //Retrieves all paths within the tree (not necessarily root to leaf) 
+        //which add up to a target number.
         public List<List<Node>> GetSequences(int target)
         {
+            //The list of lists of Nodes.
             List<List<Node>> sequenceList = new List<List<Node>>();
             List<Node> intermediate = new List<Node>();
 
@@ -169,11 +182,23 @@ namespace TreeSequence
                 DoPrint(r.Right);
         }
 
+        /// <summary>
+        /// This function scans the tree in a DFS fashion.
+        /// </summary>
+        /// <param name="curr">The current node to look at.</param>
+        /// <param name="target">The number that the branch should add up to.</param>
+        /// <param name="ls">The list to place qualifying sequences into.</param>
+        /// <param name="l">A list containing all previously visited items.</param>
         private void DoDFS(Node curr, int target, List<List<Node>> ls, List<Node> l)
         {
+            //First add the current node to the list.
             if(curr != null)
                 l.Add(curr);
 
+            //Next, iterate through the list backwards, adding all numbers.
+            //Should the sum equal to the target at any point, we will add
+            //the subset of the list "l" to the sequence list "ls" and continue scanning.
+            //We must always scan the entire list, making the worst case a O(depth).
             int sum = 0;
             for (int i = l.Count - 1; i >= 0; i--)
             {
